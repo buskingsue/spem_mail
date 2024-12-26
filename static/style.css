@@ -1,0 +1,63 @@
+/* 페이지 전체를 채우는 스타일 */
+body {
+    font-family: Arial, sans-serif; /* 기본 폰트 설정 */
+    background-color: #f4f4f9; /* 배경 색 */
+    margin: 0;
+    display: flex;
+    justify-content: center; /* 수평 중앙 */
+    align-items: center; /* 수직 중앙 */
+    height: 100vh; /* 화면 전체 높이 */
+}
+
+/* 콘텐츠를 감싸는 div */
+.container {
+    text-align: center; /* 텍스트 중앙 정렬 */
+    padding: 20px;
+    border-radius: 8px;
+    background-color: white; /* 배경을 흰색으로 설정 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    width: 80%;
+    max-width: 600px; /* 최대 너비 제한 */
+}
+
+/* 제목 스타일 */
+h1 {
+    font-size: 40px;
+    color: #333; /* 제목 색 */
+}
+
+/* 버튼 스타일 */
+button {
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049; /* 버튼 hover 효과 */
+}
+
+/* 예측 결과를 보여주는 부분 스타일 */
+h2 {
+    margin-top: 20px;
+    font-size: 24px;
+    color: #555;
+}
+
+p {
+    font-size: 18px;
+    color: #333;
+}
+
+input {
+    padding: 10px;
+    font-size: 18px;
+    width: 100%;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
