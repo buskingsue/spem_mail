@@ -8,12 +8,16 @@
 
 </head>
 <body>
+    <!-- static 폴더의 spam_monkey.jpg 이미지 삽입 -->
+    <img id="spamImage1" src="static/spam_monkey.jpg" alt="Spam Monkey" width="500">
+    <img id="spamImage2" src="static/spam_mail.png" alt="spam_mail" width="500">
+
     <div class="container">
         <h1>스팸 메일 분류기</h1>
         <form action="/" method="post">
             <label for="title">이메일 제목을 입력해주세요:</label><br>
             <input type="text" id="title" name="title" required value="{{ title }}"><br><br>
-            <button type="submit">스팸메일분류기</button>
+            <button type="submit">스팸 메일 분류기</button>
         </form>
 
         {% if prediction_result %}
@@ -22,6 +26,11 @@
         <p>스팸 여부: {{ prediction_result }}</p>
         <p>확률: {{ confidence }}%</p> <!-- 확신도에 % 기호 추가 -->
         {% endif %}
+    </div>
+     <div class="text">
+       <h1>팀이름 : 런천 미트보다 스팸</h1>
+       <h2>팀원 : 강동수 박원석</h2>
+
     </div>
 
     <script src="script.js"></script> <!-- JS 파일 연결 -->
