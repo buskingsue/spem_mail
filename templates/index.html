@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spam Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- CSS 파일 연결 -->
+
+</head>
+<body>
+    <div class="container">
+        <h1>스팸 메일 분류기</h1>
+        <form action="/" method="post">
+            <label for="title">이메일 제목을 입력해주세요:</label><br>
+            <input type="text" id="title" name="title" required value="{{ title }}"><br><br>
+            <button type="submit">스팸메일분류기</button>
+        </form>
+
+        {% if prediction_result %}
+        <h2>예측 결과:</h2>
+        <p>제목: "{{ title }}"</p>
+        <p>스팸 여부: {{ prediction_result }}</p>
+        <p>확률: {{ confidence }}%</p> <!-- 확신도에 % 기호 추가 -->
+        {% endif %}
+    </div>
+
+    <script src="script.js"></script> <!-- JS 파일 연결 -->
+</body>
+</html>
