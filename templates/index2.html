@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spam Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}"> <!-- CSS 파일 연결 -->
+
+</head>
+<body>
+    <!-- static 폴더의 spam_monkey.jpg 이미지 삽입 -->
+    <img id="spamImage1" src="static/spam_monkey.jpg" alt="Spam Monkey" width="500">
+    <img id="spamImage2" src="static/spam_mail.png" alt="spam_mail" width="500">
+
+    <div class="container">
+        <h1>이메일 제목으로</h1>
+        <h2>메일 분류하기</h2>
+        <form action="/" method="post">
+            <label for="title">이메일 제목을 입력해주세요:</label><br>
+            <input type="text" id="title" name="title" required value="{{ title }}"><br><br>
+            <button type="submit">메일 분류기</button>
+        </form>
+
+        {% if prediction_result %}
+        <h3>예측 결과:</h3>
+        <p>제목: "{{ title }}"</p>
+        <p>분류 결과: {{ prediction_result_1 , confidence_1 }}%</p>
+        <p>분류 결과: {{ prediction_result_2 , confidence_2 }}%</p>
+        {% endif %}
+    </div>
+     <div class="text">
+       <h1>팀이름 : 런천 미트보다 스팸</h1>
+       <h2>팀원 : 강동수 박원석</h2>
+
+    </div>
+
+    <script src="script.js"></script> <!-- JS 파일 연결 -->
+</body>
+</html>
