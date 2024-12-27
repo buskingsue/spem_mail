@@ -11,27 +11,27 @@ from keras._tf_keras.keras.optimizers import Adam
 # 데이터 경로
 npdata_dir = './npdata/'
 
-# 와일드카드를 사용해 파일 경로 찾기
-X_train_path = glob.glob(npdata_dir + '*X_train*.npy')[0]
-X_test_path = glob.glob(npdata_dir + '*X_test*.npy')[0]
-Y_train_path = glob.glob(npdata_dir + '*Y_train*.npy')[0]
-Y_test_path = glob.glob(npdata_dir + '*Y_test*.npy')[0]
+# # 와일드카드를 사용해 파일 경로 찾기
+# X_train_path = glob.glob(npdata_dir + '*X_train*.npy')[0]
+# X_test_path = glob.glob(npdata_dir + '*X_test*.npy')[0]
+# Y_train_path = glob.glob(npdata_dir + '*Y_train*.npy')[0]
+# Y_test_path = glob.glob(npdata_dir + '*Y_test*.npy')[0]
+X_train = np.load('./npdata/mail_data_X_train_max_54_wordsize_5169.npy', allow_pickle=True)
+Y_train = np.load('./npdata/mail_data_Y_train_max_54_wordsize_5169.npy', allow_pickle=True)
+X_test = np.load('./npdata/mail_data_X_test_max_54_wordsize_5169.npy', allow_pickle=True)
+Y_test = np.load('./npdata/mail_data_Y_test_max_54_wordsize_5169.npy', allow_pickle=True)
+
 
 # 파일 로드
-X_train = np.load(X_train_path)
-X_test = np.load(X_test_path)
-Y_train = np.load(Y_train_path)
-Y_test = np.load(Y_test_path)
 
 print(X_train.shape, Y_train.shape)
 print(X_test.shape, Y_test.shape)
 
 #============================================================================
-10576/54
 model = Sequential()
 
-model.add(Embedding(11181, 400, input_length=54))
-model.build(input_shape=(None, 19))
+model.add(Embedding(5169, 300, input_length=54))
+model.build(input_shape=(None, 54))
 
 model.add(Conv1D(32, kernel_size=5, padding='same', activation='relu'))
 model.add(MaxPooling1D(pool_size=1))
@@ -49,7 +49,7 @@ model.add(Flatten())
 
 model.add(Dense(128,activation='relu'))
 model.add(Dropout(0.35))
-model.add(Dense(2, activation='sigmoid'))
+model.add(Dense(4, activation='softmax'))
 
 model.summary()
 

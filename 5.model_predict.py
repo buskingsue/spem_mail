@@ -1,40 +1,100 @@
+import pickle
 import pandas as pd
 import numpy as np
-
-from keras._tf_keras.keras.utils import to_categorical
-from keras._tf_keras.keras.preprocessing.sequence import pad_sequences
-from keras._tf_keras.keras.models import load_model
-
-import pickle
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from keras.utils import to_categorical
 from konlpy.tag import Okt
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from keras.models import load_model
 
-model = load_model('./model/spam_model_0.9863945841789246.h5')
 
-with open('./model/mail_token_max_54.pickle', 'rb') as handle:
-    tokenizer = pickle.load(handle)
 
+df = pd.read_csv('./model/data_test.csv')
+# df.drop_duplicates(inplace=True)
+# df.reset_index(drop=True, inplace=True)
+
+print(df.head())
+df.info()
+print(df.category.value_counts())
+
+X = df['mail']
+Y = df['category']
+#===================================================================
+# 저장한 더미화로 예측할 데이터 더미화
+with open('./model/encoder.pickle', 'rb') as f:
+    encoder = pickle.load(f)
+
+label = encoder.classes_
+print(label)
+
+labeled_y = encoder.transform(Y)
+onehot_Y = to_categorical(labeled_y)
+print(onehot_Y)
+
+#===================================================================
+# 예측할 데이터 형태소 분리
 okt = Okt()
 
+for i in range(len(X)):
+    X[i] = okt.morphs(X[i], stem=True)
+print(X)
 
-# 2. 문장 스팸 여부 예측 함수
-def predict_spam(input_sentence):
-    tokenized_sentence = okt.morphs(input_sentence, stem=True)
-    sequence = tokenizer.texts_to_sequences([tokenized_sentence])
-    max_length = 100
-    padded_sequence = pad_sequences(sequence, maxlen=max_length, padding='post')
-    prediction = model.predict(padded_sequence)
+#===================================================================
+# 스탑워드 제거
 
-    # prediction이 배열일 경우 첫 번째 값을 추출
-    spam_probability = prediction[0][0]  # 2D 배열에서 첫 번째 값을 가져옴
+stopwords = pd.read_csv('./stopwords/stopwords.csv', index_col=0)
+print(stopwords)
 
-    if spam_probability < 0.5:
-        return "스팸 메시지입니다."
-    else:
-        return "정상 메시지입니다."
+for sentence in range(len(X)):
+    words = []
+    for word in range(len(X[sentence])):
+        if len(X[sentence][word]) > 1:
+            if X[sentence][word] not in list(stopwords['stopword']):
+                words.append(X[sentence][word])
+    X[sentence] = ' '.join(words)
 
+print(X[:5])
+#===================================================================
+# 제목 라벨링
+# 모델 학습 시킬 때 나온 것
 
-# 3. 테스트
-test_sentence = "(광고) 역대급 강력한 AI 폴더블 폰의 탄생"
-result = predict_spam(test_sentence)
-print(f"입력 문장: {test_sentence}")
-print(f"예측 결과: {result}")
+with open('./model/mail_token_max_222.pickle', 'rb') as f:
+    token = pickle.load(f)
+
+tokened_X = token.texts_to_sequences(X)
+# print(tokened_X[:5])
+
+ # 많을경우 자르기
+for i in range(len(tokened_X)):
+    if len(tokened_X[i]) > 222:
+         tokened_X[i] = tokened_X[i][:222]
+X_pad = pad_sequences(tokened_X, 222)
+# print(X_pad[:5])
+
+#========================================================================
+# 모델 업로드
+model = load_model('./model/mail_category_model_test1_0.9770641922950745.h5')
+preds = model.predict(X_pad)
+
+predicts = []
+for pred in preds:
+    most = label[np.argmax(pred)]
+    # pred[np.argmax(pred)] = 0
+    # second = label[np.argmax(pred)]
+    # predicts.append([most, second])
+    predicts.append(most)
+
+df['predict'] = predicts
+
+print(df[['category', 'predict']].head(30))
+
+score = model.evaluate(X_pad, onehot_Y)
+print(score[1])
+
+df['OX'] = 0
+for i in range(len(df)):
+    if df.loc[i, 'category'] in df.loc[i, 'predict']:
+        df.loc[i, 'OX'] = 1
+print(df.OX.mean())
