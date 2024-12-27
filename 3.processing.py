@@ -18,33 +18,9 @@ import pandas as pd
 import datetime
 
 #============================================================
-#데이터프레임에 columns(카테고리) 추가 + 값 설정
-df = pd.read_csv('./model/naver_final.csv')
-#df['spam'] = 'False'
-#df1 = pd.read_csv('./model/spam_final.csv')
-#df1['spam'] = 'True'
-
-#df.to_csv('./model/clean_data.csv', index=False)
-#df1.to_csv('./model/spam.csv', index=False)
-
-#df = pd.read_csv('./model/clean_data.csv')
-# #============================================================
-
-# 특수문자 제거 형태소만 남기는 작업
-# def remove(title):
-#     #return re.compile('[0-9" ]').sub(' ', title)
-#     return re.compile('[^가-힣A-Za-z ]').sub(' ', title)
-#
-# #columns[0]에만 대입
-# df[df.columns[0]] = df[df.columns[0]].astype(str).apply(remove)
-#
-# print(df.head())
-# df.to_csv('./model/clean_data_lv2.csv', index=False)
-
-#============================================================
-df = pd.read_csv('./model/clean_data_lv2.csv')
+df = pd.read_csv('model/data_lastest.csv')
 X = df['mail']
-Y = df['spam']
+Y = df['category']
 
 # 열 전처리
 # 카테고리(spam)더미화
@@ -60,7 +36,7 @@ print(label)
 #print(Y.head())
 
 # 더미화 할 때 인코더의 라벨 정보를 파일로 저장.
-with open('./model/encoder.pickle', 'wb') as f:
+with open('./model/encoder.pickle3', 'wb') as f:
      pickle.dump(encoder, f)
 
 onehot_Y = to_categorical(labeled_y)
@@ -141,7 +117,7 @@ Xtrain, Xtest, Ytrain, Ytest = train_test_split(X_pad, onehot_Y, test_size=0.1)
 print(Xtrain.shape, Ytrain.shape)
 print(Xtest.shape, Ytest.shape)
 
-np.save(f'./npdata/mail_data_X_train_max_{max}_wordsize_{wordsize}', Xtrain)
-np.save(f'./npdata/mail_data_Y_train_max_{max}_wordsize_{wordsize}', Ytrain)
-np.save(f'./npdata/mail_data_X_test_max_{max}_wordsize_{wordsize}', Xtest)
-np.save(f'./npdata/mail_data_Y_test_max_{max}_wordsize_{wordsize}', Ytest)
+np.save(f'./npdata/1mail_data_X_train_max_{max}_wordsize_{wordsize}', Xtrain)
+np.save(f'./npdata/1mail_data_Y_train_max_{max}_wordsize_{wordsize}', Ytrain)
+np.save(f'./npdata/1mail_data_X_test_max_{max}_wordsize_{wordsize}', Xtest)
+np.save(f'./npdata/1mail_data_Y_test_max_{max}_wordsize_{wordsize}', Ytest)
